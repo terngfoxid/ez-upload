@@ -14,10 +14,11 @@ export default function Home() {
   const [createObjectURL, setCreateObjectURL] = useState("");
   const [imageOutURL, setImageOutURL] = useState<dataIMGType>(null);
   const [errorM, setErrorM] = useState("");
+  const [errorM2, setErrorM2] = useState("");
 
   const uploadToClient = (event: { target: { files: FileList | null } }) => {
     if (event.target.files && event.target.files[0]) {
-      const acceptedImageTypes = ['image/png', 'image/webp','image/jpg']
+      const acceptedImageTypes = ['image/png', 'image/webp', 'image/jpg']
       if (!acceptedImageTypes.includes(event.target.files[0].type)) {
         setErrorM("ประเภทไฟล์ไม่ถูกต้อง")
         setImage(null)
@@ -42,16 +43,22 @@ export default function Home() {
     if (image != null) {
       body.append("file", image);
     }
-    axios.post('https://localhost:8080/upload', body, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  }).then((resp) => {
-    if (resp.status === 200) {
-      console.log(resp)
-      console.log('File uploaded');
-    }
-  });
+    axios.post('http://localhost:8080/upload', body, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }).then((resp) => {
+      if (resp.status === 200) {
+        setErrorM2("อัพโหลดรูปภาพสำเร็จ")
+        console.log(resp)
+        console.log('File uploaded');
+      }
+      else {
+        setErrorM2("!!อัพโหลดรูปภาพไม่สำเร็จ")
+        console.log('Error in Process');
+        console.log("<--Try-Again-Later-->")
+      }
+    });
     /*
     const response = await fetch("/api/upload", {
       method: "POST",
@@ -123,6 +130,11 @@ export default function Home() {
                       <p className='mx-2 my-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-rose-400'>Send to server</p>
                     </button>
                   </div>
+                  {errorM2 != "" &&
+                    <div className='flex justify-center mt-2 mb-1'>
+                      <p className='mb-2 text-xl font-bold text-neutral-200'>{errorM2}</p>
+                    </div>
+                  }
                 </>
                 : <></>}
 
