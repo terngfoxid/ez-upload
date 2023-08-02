@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { Inter } from '@next/font/google'
 import { useState } from 'react'
-import Link from "next/link";
+import axios from 'axios';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -42,6 +42,16 @@ export default function Home() {
     if (image != null) {
       body.append("file", image);
     }
+    axios.post('https://localhost:8080/upload', body, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }).then((resp) => {
+    if (resp.status === 200) {
+      console.log(resp)
+      console.log('File uploaded');
+    }
+  });
     /*
     const response = await fetch("/api/upload", {
       method: "POST",
