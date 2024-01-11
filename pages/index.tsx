@@ -17,7 +17,7 @@ export default function Home() {
 
   const uploadToClient = (event: { target: { files: FileList | null } }) => {
     if (event.target.files && event.target.files[0]) {
-      const acceptedImageTypes = ['image/png', 'image/webp']
+      const acceptedImageTypes = ['image/png', 'image/webp','image/gif']
       if (!acceptedImageTypes.includes(event.target.files[0].type)) {
         setErrorM("ประเภทไฟล์ไม่ถูกต้อง")
         setImage(null)
@@ -25,8 +25,8 @@ export default function Home() {
         return
       }
       const i = event.target.files[0];
-      if (i.size > 512000) {
-        setErrorM("ไฟล์มีขนาดใหญ่กว่า 500kb")
+      if (i.size > 10485760) {
+        setErrorM("ไฟล์มีขนาดใหญ่กว่า 10Mb")
         setImage(null)
         setCreateObjectURL("")
         return
