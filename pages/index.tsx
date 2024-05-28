@@ -25,8 +25,8 @@ export default function Home() {
         return
       }
       const i = event.target.files[0];
-      if (i.size > 10485760) {
-        setErrorM("ไฟล์มีขนาดใหญ่กว่า 10Mb")
+      if (i.size > 15728640) {
+        setErrorM("ไฟล์มีขนาดใหญ่กว่า 15Mb")
         setImage(null)
         setCreateObjectURL("")
         return
