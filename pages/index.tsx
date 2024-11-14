@@ -16,10 +16,11 @@ export default function Home() {
   const [imageOutURL, setImageOutURL] = useState<dataIMGType>(null);
   const [errorM, setErrorM] = useState("");
   const [errorM2, setErrorM2] = useState("");
+  const [buttonTip, setButtonTip] = useState(false);
 
   const uploadToClient = (event: { target: { files: FileList | null } }) => {
     if (event.target.files && event.target.files[0]) {
-      const acceptedImageTypes = ['image/png', 'image/webp', 'image/jpg','image/jpeg','image/gif']
+      const acceptedImageTypes = ['image/png', 'image/webp', 'image/jpg', 'image/jpeg', 'image/gif']
       if (!acceptedImageTypes.includes(event.target.files[0].type)) {
         setErrorM("ประเภทไฟล์ไม่ถูกต้อง")
         setImage(null)
@@ -133,27 +134,40 @@ export default function Home() {
                       <p className='mx-2 my-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-rose-400'>Send to server</p>
                     </button>
                   </div>
-                  {errorM2 != "" &&
-                    <div className='flex justify-center mt-2 mb-1'>
-                      <p className='mb-2 text-xl font-bold text-neutral-200'>{errorM2}</p>
-                    </div>
-                  }
                 </>
                 : <></>}
 
               {imageOutURL != null ? <>
                 <div className='w-full border border-stone-800'></div>
+                {errorM2 != "" &&
+                  <div className='flex justify-center mt-2 mb-1'>
+                    <p className='mb-2 text-xl font-bold text-neutral-200'>{errorM2}</p>
+                  </div>
+                }
+                <div className='flex justify-center mt-2 mb-1'>
+                  <img className="rounded-md" src={"/api/download/" + imageOutURL.fileName} />
+                </div>
                 <div className='flex justify-center mt-2'>
                   <h1 className="text-2xl font-bold mt-2 text-transparent bg-clip-text bg-gradient-to-r from-red-300 to-green-300">ทดสอบลิงค์ที่ใช้ดึงภาพ</h1>
                 </div>
                 <div className='flex justify-center mt-2 mb-2'>
                   <div className='w-11/12 flex justify-center'>
-                    <input readOnly type="text" id="img_id" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " value={imageOutURL.fileName}></input>
-                    <Link legacyBehavior href={"/api/download/" + imageOutURL.fileName} >
-                      <a target="_blank" className='border-stone-800 bg-neutral-500/80 font-bold text-gray-200 text-sm rounded-lg w-20 ml-2 text-center flex justify-center items-center hover:scale-110 hover:bg-neutral-400/80 duration-300'>
-                        Link
-                      </a>
-                    </Link>
+                    <input readOnly type="text" id="img_link" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " value={location.origin + "/api/download/" + imageOutURL.fileName}></input>
+                    <button className='relative border-stone-800 bg-neutral-500/80 font-bold text-gray-200 text-sm rounded-lg w-20 ml-2 text-center flex justify-center items-center hover:scale-110 hover:bg-neutral-400/80 duration-300'
+                      onClick={() => {
+                        navigator.clipboard.writeText(location.origin + "/api/download/" + imageOutURL.fileName);
+                        setButtonTip(true);
+                        setTimeout(()=>{
+                          setButtonTip(false);
+                        }, 1000)
+                      }}>
+                      Copy
+                      {buttonTip && <>
+                        <div className="animate-[wiggle_1s_ease-in-out_infinite] absolute top-0 translate-y-[-110%] z-50 whitespace-normal break-words rounded-lg bg-black py-1.5 px-3 font-sans text-sm font-normal text-white focus:outline-none">
+                        Copied!!
+                      </div>
+                      </>}
+                    </button>
                   </div>
                 </div>
               </>
